@@ -1,2 +1,0 @@
-delete from 회원
-where 학번 = '&학번'; 
