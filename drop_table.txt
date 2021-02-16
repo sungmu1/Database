@@ -1,0 +1,17 @@
+drop index 전공_인덱스;
+
+drop table 감면장학추천하다;
+drop table 교외장학추천하다;
+drop table 특별장학추천하다;
+drop table 근로장학추천하다;
+drop table 근로장학금;
+drop table 감면장학금;
+drop table 교외장학금;
+drop table 특별장학금;
+drop table 성적;
+drop table 과목구분;
+drop table 개인정보;
+drop table 회원;
+drop table 장학단체;
+
+purge recyclebin;

@@ -1,0 +1,18 @@
+ttitle '내가 입력한 정보로 추천받은 모든 장학금 검색'
+btitle '회원검색용'
+
+with 장학추천 as (
+select 학번,장학금번호 from 근로장학추천하다 union
+select 학번,장학금번호 from 감면장학추천하다 union
+select 학번,장학금번호 from 특별장학추천하다 union
+select 학번,장학금번호 from 교외장학추천하다
+),
+장학금 as (
+select 장학금번호, 장학금이름, 신청기간 from 감면장학금 union
+select 장학금번호, 장학금이름, 신청기간 from 특별장학금 union
+select 장학금번호, 장학금이름, 신청기간 from 교외장학금)
+
+select 장학추천.학번||'_'||개인정보.이름 as회원, 장학금.장학금이름, 장학금.신청기간
+from 장학추천,장학금, 개인정보
+where 장학추천.학번 = '&학번' and 장학추천.학번 = 개인정보.학번 and
+장학추천.장학금번호 = 장학금.장학금번호

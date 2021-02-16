@@ -1,0 +1,3 @@
+update 己利
+set 苞格己利 = '&苞格己利'
+where 切锅 = '&切锅' and 苞格内靛 = ( select 苞格内靛 from 苞格备盒 where 苞格备盒.苞格捞抚 = '&苞格捞抚')

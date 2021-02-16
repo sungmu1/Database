@@ -1,0 +1,163 @@
+create table 회원 (
+	학번 char(10) not null,
+	id varchar2(10),
+	pw varchar2(10),
+	primary key(학번) 
+);
+
+create table 개인정보 (
+	학번 char(10) not null,
+	이름 varchar2(10),
+ 	전공 varchar2(22),
+	소득분위 number(2),
+	학점 varchar2(4),
+	계좌번호 varchar2(15) unique,
+	봉사시간 number(3),
+	근로시간 number(3),
+	이수학기 char(10),
+	foreign key(학번) references 회원( 학번 ) on delete cascade,
+	primary key(학번),
+	check (소득분위 <= 10 and 소득분위 >= 1),
+	check (근로시간 <= 10),
+	check (이수학기 <= 8 and 이수학기 >= 0 or 이수학기 = '초과학기')
+);
+
+create table 과목구분 (
+	과목코드 varchar2(8) not null,
+	과목이름 varchar2(30),
+	과목분류 varchar2(10),
+	primary key( 과목코드 )
+);
+create table 성적 (
+	학번 char(10) not null,
+	과목코드 varchar2(8) not null,
+	과목성적 varchar2(3),
+	foreign key(학번) references 회원( 학번 )  on delete cascade,
+	foreign key( 과목코드 ) references 과목구분( 과목코드 ) on delete cascade,
+	primary key( 학번, 과목코드 ),
+	check (과목성적 = 'A' or 과목성적 = 'A+' or 과목성적 = 'B' or 과목성적 = 'B+' or 과목성적 = 'C' or 과목성적 = 'C+' or 과목성적 = 'D' or 과목성적 = 'D+' or 과목성적 = 'F')
+);	
+
+
+create table 장학단체 (
+	사업자번호 char(10) not null,
+	단체명 varchar2(22) not null unique,
+	사이트주소 varchar2(100) unique,
+	담당자연락처 varchar2(12) unique,
+	primary key( 사업자번호 )
+);
+
+
+
+create table 감면장학금 (
+	장학금번호 varchar2(4) not null,
+	장학금이름 varchar2(30) not null,
+	사업자번호 char(10) not null,
+	지급액 varchar2(60),
+	장학등급 number(10),
+	신청기간 varchar2(21),
+	신청조건 varchar2(120),
+	지급일자 varchar2(12),
+	지급범위 varchar2(20),
+	등록일자 varchar2(10),
+	foreign key( 사업자번호 ) references 장학단체( 사업자번호 )  on delete cascade,
+	primary key( 장학금번호 )
+);
+
+
+create table 교외장학금(
+	장학금번호 varchar2(4) not null,
+	장학금이름 varchar(30) not null,
+	사업자번호 char(10) not null,
+	지급액 varchar2(60),
+	신청기간 varchar2(21),
+	신청조건 varchar2(120),
+	지급일자 varchar2(12),
+	지급범위 varchar2(20),
+	등록일자 varchar2(10),
+	foreign key( 사업자번호 ) references 장학단체( 사업자번호 )  on delete cascade,
+	primary key( 장학금번호 )
+);
+
+
+create table 특별장학금 (
+	장학금번호 varchar2(4) not null,
+	장학금이름 varchar(30) not null,
+	사업자번호 char(10) not null,
+	지급액 varchar2(60),
+	장학등급 varchar2(6),
+	신청기간 varchar2(21),
+	신청조건 varchar2(120),
+	지급일자 varchar2(12),
+	등록일자 varchar2(10),
+	foreign key( 사업자번호 ) references 장학단체( 사업자번호 )  on delete cascade,
+	primary key( 장학금번호 )
+);
+
+
+create table 근로장학금 (
+	장학금번호 varchar2(4) not null,
+	부서이름 varchar2(25),
+	직무 varchar2(25),
+	사업자번호 char(10) not null,
+	신청기간 varchar2(21),
+	지급액 varchar2(60),
+	소득분위 varchar2(2),
+	근로시간 varchar2(40),
+	등록일자 varchar2(10),
+	foreign key( 사업자번호 ) references 장학단체( 사업자번호 )  on delete cascade,
+	primary key( 장학금번호 ),
+	check(지급액 >= '6470원')
+);
+
+
+create table 감면장학추천하다 (
+	학번 char(10) not null,
+	장학금번호 varchar2(4) not null,
+	신청여부 char(2),
+	신청일자 varchar(10),
+	수령여부 char(2),
+	foreign key(학번) references 회원( 학번 )  on delete cascade,
+	foreign key( 장학금번호 ) references 감면장학금( 장학금번호 )  on delete cascade,
+	primary key( 학번 , 장학금번호 ),
+	check(신청여부 = 'Y' or 신청여부 = 'N')
+);
+
+create table 교외장학추천하다 (
+	학번 char(10) not null,
+	장학금번호 varchar2(4) not null,
+	신청여부 char(2),
+	신청일자 varchar(10),
+	수령여부 char(2),
+	foreign key(학번) references 회원( 학번 )  on delete cascade,
+	foreign key( 장학금번호 ) references 교외장학금( 장학금번호 )  on delete cascade,
+	primary key( 학번 , 장학금번호 ),
+	check(신청여부 = 'Y' or 신청여부 = 'N')
+);
+
+create table 특별장학추천하다 (
+	학번 char(10) not null,
+	장학금번호 varchar2(4) not null,
+	신청여부 char(2),
+	신청일자 varchar(10),
+	수령여부 char(2),
+	foreign key(학번) references 회원( 학번 )  on delete cascade,
+	foreign key( 장학금번호 ) references 특별장학금( 장학금번호 )  on delete cascade,
+	primary key( 학번 , 장학금번호 ),
+	check(신청여부 = 'Y' or 신청여부 = 'N')
+);
+
+
+create table 근로장학추천하다( 
+	학번 char(10) not null,
+	장학금번호 varchar2(4) not null,
+	신청여부 char(2),
+	신청일자 varchar(10),
+	foreign key(학번) references 회원( 학번 )  on delete cascade,
+	foreign key( 장학금번호 ) references 근로장학금( 장학금번호 )  on delete cascade,
+	primary key( 학번 , 장학금번호 ),
+	check(신청여부 = 'Y' or 신청여부 = 'N')
+);
+
+create index 전공_인덱스
+on 개인정보(전공)
