@@ -1,2 +1,0 @@
-INSERT INTO 회원 (학번,id, pw)
-VALUES ('&학번','&id', '&pw')
